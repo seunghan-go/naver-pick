@@ -9,6 +9,8 @@ from urllib.parse import urljoin
 from random import randrange
 from bs4 import BeautifulSoup
 import sys
+import json 
+from pathlib import Path 
 
 def find_naver_campaign_links(base_url, visited_urls_file='visited_urls.txt'):
     # Read visited URLs from file
@@ -70,6 +72,21 @@ def init_webdriver():
 
     return driver
 
+# GitHub Action을 사용하지 않을 경우, id, pw를 아래 형태로 id_pw.json 파일로 만들어 쓰시면 됩니다.
+## {"USERNAME":"네이버아이디", "PASSWORD":"비번" }
+def get_login_info():
+    cur_file = Path(os.path.realpath(__file__))
+    pw_file = cur_file.parent / 'id_pw.json'
+    if pw_file.exists():
+        dic = json.load(pw_file.open('r'))
+        id = dic['USERNAME']
+        pw = dic['PASSWORD']
+        print(f"{id}, {pw}")
+    else:
+        id = os.getenv("USERNAME","ID is null")
+        pw = os.getenv("PASSWORD","PASSWORD is null")
+    return id, pw
+
 
 def login_naver(driver):
     driver.get('https://naver.com')
@@ -96,11 +113,8 @@ def login_naver(driver):
     username = driver2.find_element(By.NAME, 'id')
     pw = driver2.find_element(By.NAME, 'pw')
 
-    # GitHub Action을 사용하지 않을 경우, 아래와 같이 변경 해주어야 합니다.
-    # input_id = '아이디'
-    # input_pw = '비번'
-    input_id = os.getenv("USERNAME","ID is null")
-    input_pw = os.getenv("PASSWORD","PASSWORD is null")
+    # 로그인 정보 획득
+    input_id, input_pw = get_login_info()
 
     # ID input 클릭
     username.click()
