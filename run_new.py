@@ -93,6 +93,7 @@ pw = driver2.find_element(By.NAME, 'pw')
 # input_pw = 패스워드
 input_id = os.getenv("USERNAME","ID is null")
 input_pw = os.getenv("PASSWORD","PASSWORD is null")
+time.sleep(60*10)  # 10분간 멈춤. 2단계 인증 쓰고 있어서 눌러줘야 함. 
 
 # ID input 클릭
 username.click()
