@@ -161,17 +161,21 @@ def do_clipping(driver):
 
     time.sleep(10)
 
+
 def main():
     driver = init_webdriver()
 
     login_naver(driver)
 
-    while True:
-        do_clipping(driver)
+    if True:    ## 1회만 실행. github action의 무료 runner가 월 2000 분 limit 이 있음 발견.. 아쉽..  
+        do_clipping(driver)        
+    else:  # 2FA 쓰는 다른 클라우드 사용자용
+        while True:
+            do_clipping(driver)
 
-        sleep_min = randrange(5, 15)
-        print(f"{sleep_min}분 휴식")
-        time.sleep(60*sleep_min)
+            sleep_min = randrange(5, 15)
+            print(f"{sleep_min}분 휴식")
+            time.sleep(60*sleep_min)
 
 if __name__ == '__main__':
     sys.exit(main())
